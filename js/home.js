@@ -21,7 +21,10 @@ const getEmployeePayrollDataFromStorage = () => {
  */
 
 const createInnerHtml = () => {
-    localStorage.setItem("employeeData ",JSON.stringify(empPayrollData))
+   let empPayrollData= createEmployeePayrollJSON();
+   console.log(empPayrollData)
+    localStorage.setItem("employeeData",JSON.stringify(createEmployeePayrollJSON()));
+    console.log(localStorage.getItem("employeeData"));
     const headerHtml = `
                         <th></th>
                         <th>Name</th>
@@ -53,11 +56,7 @@ const createInnerHtml = () => {
     document.querySelector('#table-display').innerHTML = innerHtml;
 }
 
-/**
- * converting numbers into date format.
- * @param {*} date :1577817000000
- * @returns : 3 - Jan - 2020
- */
+
 const getDate = (date) => {
     let temp = date;
     const d = new Date(temp);
@@ -99,10 +98,17 @@ const createEmployeePayrollJSON = () => {
 }
 
 const remove = (node) => {
+   
+    var EmployeePayrollList= JSON.parse(localStorage.getItem("employeeData"))
+    console.log(EmployeePayrollList)
+
     empPayrollList = empPayrollList.filter(emp => emp._id != node.id);
+    if(!empPayrollList) return;
+    const index = empPayrollList.map(empData=>empData._id).indexOf(empPayrollList._id);
+    empPayrollList.splice(index,1);
     storeDataToLocalStorage();
-    createInnerHtml();
     document.querySelector(".emp-count").textContent = empPayrollList.length;
+    createInnerHtml();
 }
 
 const storeDataToLocalStorage = () => {
